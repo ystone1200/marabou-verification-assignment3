@@ -80,6 +80,18 @@ results/wine_marabou_results.json
 
 `SAT` 결과가 나오면 Marabou가 찾은 counterexample input과 output도 JSON에 함께 저장된다.
 
+## 주요 검증 결과
+
+최종 실행에서는 low-margin correct test sample 3개를 선택해 epsilon sweep을 수행했다.
+
+| Sample | Logit margin | Largest tested robust epsilon | First non-robust epsilon |
+| --- | ---: | ---: | ---: |
+| `low_margin_1` | 0.002380 | 없음 | 0.01 |
+| `low_margin_2` | 0.293360 | 없음 | 0.01 |
+| `low_margin_3` | 4.312881 | 0.1 | 0.3 |
+
+`low_margin_3`은 epsilon `0.01`, `0.05`, `0.1`에서 `UNSAT`으로 robust했고, epsilon `0.3`부터 `SAT` counterexample이 발견되었다. 이 결과는 `results/wine_marabou_results.json`에 저장되어 있다.
+
 ## 검증 property
 
 선택된 test sample의 normalized input을 `x`라고 할 때, Marabou에는 각 feature에 대해 다음 입력 bound를 부여한다.
@@ -109,6 +121,7 @@ docs/model_selection.md        Wine MLP 선택 근거와 검증 계획
 src/train_wine_mlp.py          Wine MLP 학습 및 ONNX export
 test.py                        Marabou verification query 실행
 requirements.txt               Python 의존성
+report.pdf                     최종 1-2페이지 보고서
 models/                        생성된 ONNX 모델 저장 위치
 results/                       Marabou 검증 결과 저장 위치
 ```

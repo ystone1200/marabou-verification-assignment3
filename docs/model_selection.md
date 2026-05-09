@@ -13,7 +13,7 @@ Problem 2에서는 `Wine dataset`으로 학습한 작은 fully connected neural 
 | 출력 class | 3개 wine cultivar class |
 | 모델 형식 | ONNX |
 | 모델 구조 | `13 -> 16 -> ReLU -> 8 -> ReLU -> 3` |
-| 검증 property | 특정 test sample 주변의 local robustness |
+| 검증 property | low-margin test sample 주변의 local robustness |
 
 ## 선택 이유
 
@@ -29,7 +29,9 @@ Wine dataset은 Iris보다 feature가 많아서 너무 단순하지 않으면서
 
 ## 검증 query 계획
 
-검증 대상은 test set에서 올바르게 분류된 sample 하나로 정한다. 이 sample의 normalized input을 `x`라고 할 때, 각 feature에 대해 다음 입력 범위를 둔다.
+검증 대상은 test set에서 올바르게 분류된 sample 중 output logit margin이 작은 sample들로 정한다. margin이 작은 sample은 모델이 두 class 사이에서 덜 확신하는 경우이므로, epsilon을 키웠을 때 SAT counterexample이 나올 가능성이 더 높다.
+
+선택한 sample의 normalized input을 `x`라고 할 때, 각 feature에 대해 다음 입력 범위를 둔다.
 
 ```text
 x_i - epsilon <= x'_i <= x_i + epsilon
@@ -42,6 +44,8 @@ y_j >= y_c
 ```
 
 Marabou에서 이 조건이 `UNSAT`이면 해당 epsilon 범위 안에서 class가 바뀌는 반례가 없다는 뜻이다. `SAT`이면 Marabou가 찾은 입력이 원래 class보다 다른 class를 더 크게 만드는 반례라는 뜻이다.
+
+epsilon은 작은 값부터 큰 값까지 sweep한다. 기본 실행에서는 `0.01, 0.05, 0.1, 0.3, 0.5, 1.0`을 확인해 robustness가 유지되는 구간과 깨지는 구간을 함께 관찰한다.
 
 ## 예상되는 장점과 위험
 

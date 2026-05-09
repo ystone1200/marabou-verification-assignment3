@@ -44,7 +44,7 @@ models/wine_mlp.onnx
 models/wine_mlp_metadata.json
 ```
 
-`wine_mlp_metadata.json`에는 scaler 정보, 정확도, 검증에 사용할 test sample, 원래 예측 class가 기록된다.
+`wine_mlp_metadata.json`에는 scaler 정보, 정확도, ONNX/PyTorch 출력 차이, reference test sample 정보가 기록된다.
 
 ## Marabou 검증 실행
 
@@ -54,16 +54,22 @@ models/wine_mlp_metadata.json
 python test.py
 ```
 
-기본적으로 normalized feature space에서 다음 epsilon 값을 확인한다.
+기본 실행에서는 test set 전체를 다시 구성한 뒤, 올바르게 분류된 sample 중 output logit margin이 가장 작은 sample 3개를 선택한다. 그런 다음 normalized feature space에서 다음 epsilon 값을 확인한다.
 
 ```text
-0.01, 0.03, 0.05
+0.01, 0.05, 0.1, 0.3, 0.5, 1.0
 ```
 
-특정 epsilon이나 timeout을 지정하려면 다음처럼 실행한다.
+특정 epsilon, sample 수, timeout을 지정하려면 다음처럼 실행한다.
 
 ```bash
-python test.py --epsilons 0.01 0.02 0.03 --timeout 120
+python test.py --sample-count 5 --epsilons 0.01 0.05 0.1 0.2 0.3 --timeout 120
+```
+
+metadata에 저장된 reference sample 하나만 다시 검증하려면 다음처럼 실행한다.
+
+```bash
+python test.py --sample-source stored
 ```
 
 결과는 화면에 출력되고, 동시에 다음 파일로 저장된다.
@@ -71,6 +77,8 @@ python test.py --epsilons 0.01 0.02 0.03 --timeout 120
 ```text
 results/wine_marabou_results.json
 ```
+
+`SAT` 결과가 나오면 Marabou가 찾은 counterexample input과 output도 JSON에 함께 저장된다.
 
 ## 검증 property
 

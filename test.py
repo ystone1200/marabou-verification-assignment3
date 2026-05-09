@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
-from maraboupy import Marabou, MarabouCore
+from maraboupy import Marabou, MarabouCore, MarabouUtils
 
 
 def parse_args() -> argparse.Namespace:
@@ -55,7 +55,7 @@ def add_target_beats_original_constraint(
     target_class: int,
 ) -> None:
     # Search for a counterexample where y_target >= y_original.
-    equation = MarabouCore.Equation(MarabouCore.Equation.LE)
+    equation = MarabouUtils.Equation(MarabouCore.Equation.LE)
     equation.addAddend(1.0, output_vars[original_class])
     equation.addAddend(-1.0, output_vars[target_class])
     equation.setScalar(0.0)
@@ -94,14 +94,14 @@ def solve_single_target(
 
     options = Marabou.createOptions(timeoutInSeconds=timeout)
     start = time.perf_counter()
-    values, _stats = network.solve(options=options, verbose=False)
+    exit_code, values, _stats = network.solve(options=options, verbose=False)
     elapsed = time.perf_counter() - start
 
-    sat = len(values) > 0
+    sat = exit_code == "sat"
     result: dict[str, Any] = {
         "epsilon": epsilon,
         "target_class": target_class,
-        "status": "SAT" if sat else "UNSAT",
+        "status": str(exit_code).upper(),
         "runtime_seconds": elapsed,
     }
 

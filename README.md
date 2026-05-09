@@ -12,6 +12,15 @@ Windows PC에서는 WSL2 Ubuntu 환경에서 실행하는 것을 권장한다. M
 
 ## 설치
 
+Ubuntu 24.04에서 기본 Python이 3.12인 경우, Python 3.11 환경을 따로 만든 뒤 실행한다. 이 작업에서는 다음 micromamba 환경을 사용했다.
+
+```bash
+~/.local/bin/micromamba create -y -p ~/.local/share/mamba-envs/assignment3 -c conda-forge python=3.11 pip
+~/.local/bin/micromamba run -p ~/.local/share/mamba-envs/assignment3 python -m pip install -r requirements.txt
+```
+
+Python 3.10 또는 3.11이 이미 준비되어 있다면 일반 venv를 사용해도 된다.
+
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
@@ -93,4 +102,5 @@ src/train_wine_mlp.py          Wine MLP 학습 및 ONNX export
 test.py                        Marabou verification query 실행
 requirements.txt               Python 의존성
 models/                        생성된 ONNX 모델 저장 위치
+results/                       Marabou 검증 결과 저장 위치
 ```

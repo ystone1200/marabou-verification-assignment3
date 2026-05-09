@@ -21,6 +21,9 @@ from sklearn.preprocessing import StandardScaler
 from torch import nn
 
 
+ONNX_OPSET_VERSION = 18
+
+
 class WineMLP(nn.Module):
     def __init__(self) -> None:
         super().__init__()
@@ -137,7 +140,8 @@ def main() -> None:
         onnx_path,
         input_names=["input"],
         output_names=["logits"],
-        opset_version=11,
+        opset_version=ONNX_OPSET_VERSION,
+        external_data=False,
     )
 
     session = ort.InferenceSession(str(onnx_path), providers=["CPUExecutionProvider"])
@@ -156,6 +160,7 @@ def main() -> None:
         "dataset": "sklearn.datasets.load_wine",
         "architecture": "13 -> 16 -> ReLU -> 8 -> ReLU -> 3",
         "onnx_model": str(onnx_path.relative_to(project_root)),
+        "onnx_opset_version": ONNX_OPSET_VERSION,
         "seed": args.seed,
         "epochs": args.epochs,
         "train_accuracy": train_accuracy,

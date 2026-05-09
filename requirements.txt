@@ -1,0 +1,7 @@
+# Use Python 3.10 or 3.11. Marabou's Python bindings do not support Python 3.14.
+maraboupy
+numpy
+scikit-learn
+torch
+onnx
+onnxruntime

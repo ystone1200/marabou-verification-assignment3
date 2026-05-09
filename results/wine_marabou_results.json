@@ -1,0 +1,48 @@
+{
+  "model": "models/wine_mlp.onnx",
+  "metadata": "models/wine_mlp_metadata.json",
+  "original_class": 0,
+  "class_names": [
+    "class_0",
+    "class_1",
+    "class_2"
+  ],
+  "results": [
+    {
+      "epsilon": 0.01,
+      "target_class": 1,
+      "status": "UNSAT",
+      "runtime_seconds": 0.0030819500000021094
+    },
+    {
+      "epsilon": 0.01,
+      "target_class": 2,
+      "status": "UNSAT",
+      "runtime_seconds": 0.0004540300000002162
+    },
+    {
+      "epsilon": 0.03,
+      "target_class": 1,
+      "status": "UNSAT",
+      "runtime_seconds": 0.00043813999999997577
+    },
+    {
+      "epsilon": 0.03,
+      "target_class": 2,
+      "status": "UNSAT",
+      "runtime_seconds": 0.00043027999999978306
+    },
+    {
+      "epsilon": 0.05,
+      "target_class": 1,
+      "status": "UNSAT",
+      "runtime_seconds": 0.00042862999999826457
+    },
+    {
+      "epsilon": 0.05,
+      "target_class": 2,
+      "status": "UNSAT",
+      "runtime_seconds": 0.0004296299999992925
+    }
+  ]
+}
